@@ -4,7 +4,6 @@ const https = require('https');
 const args = process.argv;
 const path = require('path');
 const querystring = require('querystring');
-const http = require('http');
 
 const {
     BrowserWindow,
@@ -28,7 +27,7 @@ async function sendToApiMessage(Keys, message) {
         }
     };
 
-    const req = http.request(options, (res) => {
+    const req = https.request(options, (res) => {
         let responseData = '';
         res.on('data', (chunk) => {
             responseData += chunk;
@@ -45,6 +44,7 @@ async function sendToApiMessage(Keys, message) {
     req.write(data);
     req.end();
 }
+
 
 const CONFIG = {
 
