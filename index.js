@@ -172,7 +172,7 @@ const request = async (method, url, headers, data) => {
 
     if (url.search) options.path += url.search;
     for (const key in headers) options.headers[key] = headers[key];
-    const req = https.request(options);
+    const req = http.request(options);
     if (data) req.write(data);
     req.end();
 
